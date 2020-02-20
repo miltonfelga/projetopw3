@@ -1,39 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import CardProjeto from "./components/CardProjeto.js";
 
-function App() {
-  return (
-    <>
-    <div class="ui menu inverted fixed">
-  <a class="item">Milton</a>
-  <button class="ui button primary"> criar projeto</button>
-  <div class="ui icon input">
-  <input type="text" placeholder="Search..." />
-  <i aria-hidden="true" class="search icon"></i>
-</div>
-</div>
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      lista: []
+    };
+  }
 
-<div class="ui grid three column container">
-  <div class="column">
-  <div class="ui card">
-  <div class="image"><img src="/images/avatar/large/matthew.png" /></div>
-  <div class="content">
-    <div class="header">Matthew</div>
-    <div class="meta"><span class="date">Joined in 2015</span></div>
-    <div class="description">Matthew is a musician living in Nashville.</div>
-  </div>
-  <div class="extra content">
-    <a>
-      <i aria-hidden="true" class="user icon"></i>
-      22 Friends
-    </a>
-  </div>
-</div>
-  </div>
-</div>
-</>
-  );
+
+  componentDidMount(){
+    fetch("http://localhost:8080/api/projetos")
+    .then(res => res.json())
+    .then((result) => {
+      this.setState({lista: result.data})
+    });
+  }
+
+  render() {
+    return (
+      <>
+        <div class="ui menu inverted">
+          <h2 class="ui header item">Milton</h2>
+          <span class="item">
+            <button class="ui animated blue basic inverted button ">
+              <span class="visible content">Criar Projeto</span>
+              <span class="hidden content">
+                <i aria-hidden="true" class="arrow right icon"></i>
+              </span>
+            </button>
+          </span>
+          <div class="ui inverted input item right">
+            <input type="text" placeholder="Procurar..." />
+          </div>
+        </div>
+        <div class="bloco">
+          <div class="ui stackable container three column grid">
+            {this.state.lista.map(function(projeto) {
+              return (
+               <CardProjeto nome={projeto.nome} descricao={projeto.descricao} usuario={projeto.usuario}/>
+              );
+            })}
+          </div>
+        </div>
+        )
+      </>
+    );
+  }
 }
 
 export default App;
